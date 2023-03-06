@@ -24,6 +24,9 @@ const Home = () => {
             <h2>
                 Flight Logs
             </h2>
+
+            <FlightLogs flightlogs={flightlogs} />
+
         </div>
     )
 }
