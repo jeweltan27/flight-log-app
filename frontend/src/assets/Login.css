@@ -1,0 +1,13 @@
+.login, .register {
+    align-items: center;
+    margin: 100px;
+}
+
+p {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 50%;
+}
