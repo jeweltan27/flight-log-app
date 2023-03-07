@@ -1,0 +1,10 @@
+requests==2.25.1
+Flask>=2.2.2
+Flask-SQLAlchemy==2.4.4
+mysql-connector-python==8.0.23
+Flask-Cors==3.0.10
+SQLAlchemy<1.4
+pika==1.2.0
+invoke==1.5
+flask-testing==0.8.1
+python-decouple==3.5
