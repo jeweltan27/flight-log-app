@@ -78,6 +78,7 @@ def get_all_flightlog():
         
         for flightlog in flightLogs:
             flightLogsArray.append({
+                "id": flightlog.id,
                 "tailNumber": flightlog.tailNumber,
                 "flightID": flightlog.flightID,
                 "takeoff": flightlog.takeoff,
@@ -184,7 +185,8 @@ class FlightLog(db.Model):
     landing = db.Column(db.VARCHAR(255), nullable=False)
     duration = db.Column(db.VARCHAR(255), nullable=False)
 
-    def __init__(self, tailNumber, flightID, takeoff, landing, duration):
+    def init(self, id, tailNumber, flightID, takeoff, landing, duration):
+        self.id = id,
         self.tailNumber = tailNumber
         self.flightID = flightID
         self.takeoff = takeoff
