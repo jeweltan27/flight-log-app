@@ -17,7 +17,15 @@ const FlightLog = (props) => {
     const landingDateString = new Date(flightlog.landing).toLocaleDateString();
     const landingTimeString = new Date(flightlog.landing).toLocaleTimeString();
 
-    
+    const handleDelete = (event) => {
+        event.preventDefault()
+        axios.delete(API_URL + "/" + flightlog.id)
+        .then((response) => {
+            console.log(response.data)
+        });
+        navigate("/");
+        window.location.reload()
+    }
 
     return (
         <>
@@ -49,7 +57,7 @@ const FlightLog = (props) => {
 
                 <td>
                     <Button className="first-button" variant="primary">Update</Button>
-                    <Button variant="outline-danger" >Delete</Button>
+                    <Button variant="outline-danger" onClick={handleDelete} >Delete</Button>
                 </td>
 
             </tr>
