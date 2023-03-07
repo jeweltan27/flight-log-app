@@ -3,12 +3,20 @@ import Table from 'react-bootstrap/Table';
 import FlightLog from './FlightLog';
 
 const FlightLogs = (props) => {
-    const [ flightlogs, setFlightLogs ] = useState(props.flightlogs);
+    console.log("Inside FlightLogs component")
+
+    const [ flightlogs, setFlightlogs ] = useState(props.flightlogs);
+    
+    useEffect(() => { 
+        setFlightlogs(props.flightlogs); 
+      }, [props.flightlogs]);
+    
     console.log(flightlogs);
     return (
         <Table striped bordered hover>
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Tail Number</th>
                     <th>Flight ID</th>
                     <th>Take Off Time</th>
@@ -19,8 +27,8 @@ const FlightLogs = (props) => {
             </thead>
             <tbody>
                 {
-                    flightlogs.map(flightlog => (
-                        <FlightLog key={flightlog.tailNumber} flightlog={flightlog} /> 
+                    flightlogs?.map(flightlog => (
+                        <FlightLog key={flightlog.id} flightlog={flightlog} /> 
                     ))
                 }
             </tbody>

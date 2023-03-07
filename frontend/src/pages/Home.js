@@ -1,34 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
+import axios from "axios"; 
 import FlightLogs from '../components/FlightLogs'
 import "../assets/Home.css";
 import Button from 'react-bootstrap/Button';
 
+const API_URL = "http://127.0.0.1:5000/"
 
 const Home = () => {
+    console.log("Inside Home page")
     const navigate = useNavigate();
-
+    const [flightlogs, setFlightlogs] = useState();
     const onHandleClick = (e) => {
         navigate("/newflightlog");
     }
 
-    const flightlogs = [
-        {
-            tailNumber: "001",
-            flightID: "SQ351",
-            takeoff: "2023-02-15T00:00:00+08:00",
-            landing: "2023-02-15T00:12:30+08:00",
-            duration: "12h 30 min",
-        },
-        {
-            tailNumber: "002",
-            flightID: "SQ352",
-            takeoff: "2023-02-17T23:00:00+08:00",
-            landing: "2023-02-18T00:12:15+08:00",
-            duration: "13h 15 min",
-        }
-    ]
+    useEffect( () => {
+        getAllFlightlogs();
+    }, []);
+
+    const getAllFlightlogs = () => {
+        axios.get(API_URL + "flightLog")
+        .then((response) => {
+            setFlightlogs(response.data.data);
+            console.log(response.data.data);
+            return response.data.data;
+        });
+    }
+
     return (
         <div className="home">
             <h2>

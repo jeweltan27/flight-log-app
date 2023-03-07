@@ -1,26 +1,37 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
+import axios from "axios"; 
+import { useNavigate } from 'react-router-dom';
 import "../assets/Home.css";
+const API_URL = "http://127.0.0.1:5000/flightLog"
 
 const FlightLog = (props) => {
+    console.log("Inside FlightLog component")
     console.log(props.flightlog);
-    const takeoffDateString = new Date(props.flightlog.takeoff).toLocaleDateString();
-    const takeoffTimeString = new Date(props.flightlog.takeoff).toLocaleTimeString();
 
-    const landingDateString = new Date(props.flightlog.landing).toLocaleDateString();
-    const landingTimeString = new Date(props.flightlog.landing).toLocaleTimeString();
+    const navigate = useNavigate();
+    const flightlog = props.flightlog;
+    const takeoffDateString = new Date(flightlog.takeoff).toLocaleDateString();
+    const takeoffTimeString = new Date(flightlog.takeoff).toLocaleTimeString();
 
-    console.log(landingDateString);
+    const landingDateString = new Date(flightlog.landing).toLocaleDateString();
+    const landingTimeString = new Date(flightlog.landing).toLocaleTimeString();
+
+    
 
     return (
         <>
             <tr>
                 <td>
-                    {props.flightlog.tailNumber}
+                    {flightlog.id}
                 </td>
 
                 <td>
-                    {props.flightlog.flightID}
+                    {flightlog.tailNumber}
+                </td>
+
+                <td>
+                    {flightlog.flightID}
                 </td>
 
                 <td>
@@ -33,12 +44,12 @@ const FlightLog = (props) => {
                 </td>
 
                 <td>
-                    {props.flightlog.duration}
+                    {flightlog.duration}
                 </td>
 
                 <td>
                     <Button className="first-button" variant="primary">Update</Button>
-                    <Button variant="danger">Delete</Button>
+                    <Button variant="outline-danger" >Delete</Button>
                 </td>
 
             </tr>
