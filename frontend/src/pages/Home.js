@@ -1,8 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+
 import FlightLogs from '../components/FlightLogs'
 import "../assets/Home.css";
+import Button from 'react-bootstrap/Button';
+
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const onHandleClick = (e) => {
+        navigate("/newflightlog");
+    }
+
     const flightlogs = [
         {
             tailNumber: "001",
@@ -25,6 +35,12 @@ const Home = () => {
                 Flight Logs
             </h2>
 
+            <div className="create-button">
+                <Button variant="outline-secondary" onClick={onHandleClick}>
+                    Create new flight log
+                </Button>
+            </div>
+                
             <FlightLogs flightlogs={flightlogs} />
 
         </div>

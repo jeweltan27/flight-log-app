@@ -3,12 +3,13 @@
     margin: 40px;
 }
 
-h2 {
-    margin-bottom: 30px;
-}
-
 .first-button {
     margin-right: 40px;
+}
+
+.create-button {
+    margin-bottom: 10px;
+    text-align: right;
 }
 
 .form-group {

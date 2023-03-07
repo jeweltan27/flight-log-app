@@ -1,0 +1,14 @@
+.form {
+    margin-top: 15px;
+    font-weight: 500;
+    width: 50%;
+}
+
+.takeoff-time {
+    color: red;
+}
+
+.landing-time {
+    color: blue;
+}
+
