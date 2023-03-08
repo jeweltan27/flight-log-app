@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 import axios from "axios"; 
+import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import "../assets/Home.css";
 const API_URL = "http://127.0.0.1:5000/flightLog"
@@ -11,11 +12,26 @@ const FlightLog = (props) => {
 
     const navigate = useNavigate();
     const flightlog = props.flightlog;
-    const takeoffDateString = new Date(flightlog.takeoff).toLocaleDateString();
-    const takeoffTimeString = new Date(flightlog.takeoff).toLocaleTimeString();
-
-    const landingDateString = new Date(flightlog.landing).toLocaleDateString();
-    const landingTimeString = new Date(flightlog.landing).toLocaleTimeString();
+    const takeoffDateString = moment(flightlog.takeoff).utc().format('DD-MMM-YYYY');
+    const takeoffTimeString = flightlog.takeoff.split('T')[1].slice(0, -1);
+    const landingDateString = moment(flightlog.landing).utc().format('DD-MMM-YYYY');
+    const landingTimeString = flightlog.landing.split('T')[1].slice(0, -1);
+    
+    const handleUpdate = (event) => {
+        event.preventDefault()
+        navigate(
+            "/updateflightlog",
+            { state: {
+                id: flightlog.id,
+                currentTailNumber: flightlog.tailNumber,
+                currentFlightID: flightlog.flightID,
+                currentTakeoff: flightlog.takeoff,
+                currentLanding: flightlog.landing,
+                currentDuration: flightlog.duration    
+            }}
+        );
+        window.location.reload();
+    }
 
     const handleDelete = (event) => {
         event.preventDefault()
@@ -56,7 +72,7 @@ const FlightLog = (props) => {
                 </td>
 
                 <td>
-                    <Button className="first-button" variant="primary">Update</Button>
+                    <Button className="first-button" variant="primary" onClick={handleUpdate}>Update</Button>
                     <Button variant="outline-danger" onClick={handleDelete} >Delete</Button>
                 </td>
 
