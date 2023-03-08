@@ -1,0 +1,25 @@
+.giant-block {
+    margin-top: 15px;
+    margin-left: 20px;
+    font-weight: 500;
+    width: 50%;
+}
+
+.form, p {
+    margin-left: 115px;
+}
+
+a, p {
+    font-weight: 400;
+    color: grey;
+}
+.second-col {
+    margin-left: 30px;
+}
+
+img {
+    margin-left: 20px;
+}
+
+
+
