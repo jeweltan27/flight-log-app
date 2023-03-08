@@ -21,5 +21,16 @@ img {
     margin-left: 20px;
 }
 
+.update-button {
+    background-color: rgb(78, 166, 255);
+    margin-right: 20px;
+}
 
+.update-button:hover {
+    background-color: rgb(26, 117, 215);
 
+}
+
+.hours, .minutes {
+    padding-top: 12px;
+}

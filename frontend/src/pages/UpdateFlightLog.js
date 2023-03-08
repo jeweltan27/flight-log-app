@@ -19,6 +19,7 @@ const UpdateFlightLog = () => {
     const {state} = useLocation();
     const { id, currentTailNumber, currentFlightID, currentTakeoff, currentLanding, currentDuration } = state;
     
+    // Helper functions
     const formatTimeToHHMMSS = (time) => {
         var sec_num = parseInt(time, 10);
         var hours   = Math.floor(sec_num / 3600);
@@ -37,12 +38,19 @@ const UpdateFlightLog = () => {
         const seconds = (hour * 3600) + (minute * 60) + second;
         return seconds;
     }
- 
+    const formatDurationString = (hour, minute) => {
+        return hour + " hr " + minute + " min"
+    }
+
     // Format date and time to match input fields' required format
     const currentTakeoffDate = moment(currentTakeoff).utc().format('YYYY-MM-DD');
     const currentTakeoffTime = reverseFormatTimeToSeconds(currentTakeoff.split('T')[1]);
+
     const currentLandingDate = moment(currentLanding).utc().format('YYYY-MM-DD');
     const currentLandingTime = reverseFormatTimeToSeconds(currentLanding.split('T')[1]);
+
+    const currentHour = currentDuration.split(' ')[0];
+    const currentMinute = currentDuration.split(' ')[2];
 
     // Set default values to the existing flightlog's data
     const [tailNumber, setTailNumber] = useState(currentTailNumber);
@@ -51,7 +59,8 @@ const UpdateFlightLog = () => {
     const [takeoffTime, setTakeoffTime] = useState(currentTakeoffTime);
     const [landingDate, setLandingDate] = useState(currentLandingDate);
     const [landingTime, setLandingTime] = useState(currentLandingTime);
-    const [duration, setDuration] = useState(currentDuration);
+    const [durationHours, setDurationHours] = useState(currentHour);
+    const [durationMinutes, setDurationMinutes] = useState(currentMinute);
 
     // When input fields change
     const onChangeTailNumber = (event) => {
@@ -78,9 +87,13 @@ const UpdateFlightLog = () => {
         const landingTime = time;
         setLandingTime(landingTime);
     }
-    const onChangeDuration = (event) => {
-        const duration = event.target.value;
-        setDuration(duration);
+    const onChangeDurationHours = (event) => {
+        const durationHour = event.target.value;
+        setDurationHours(durationHour);
+    }
+    const onChangeDurationMinutes = (event) => {
+        const durationMinute = event.target.value;
+        setDurationMinutes(durationMinute);
     }
 
     // When user updates flightlog
@@ -92,13 +105,13 @@ const UpdateFlightLog = () => {
         const formatLandingTime = formatTimeToHHMMSS(landingTime);
         const isoFormatTakeoff = takeoffDate + "T" + formatTakeoffTime + "Z";
         const isoFormatLanding = landingDate + "T" + formatLandingTime + "Z";
-
+        const formatDuration = formatDurationString(durationHours, durationMinutes);
         const updatedFlightLog = {
             tailNumber: tailNumber,
             flightID: flightID,
             takeoff: isoFormatTakeoff,
             landing: isoFormatLanding,
-            duration: duration
+            duration: formatDuration
         }
         axios.put(API_URL + "/" + id, updatedFlightLog)
             .then((response) => {
@@ -153,10 +166,25 @@ const UpdateFlightLog = () => {
                 
                 <Form.Group className="mb-3" controlId="duration">
                     <Form.Label>Duration</Form.Label>
-                    <Form.Control type="text" value={duration} onChange={onChangeDuration} />
+                    <Row className="mb-2">
+                        <Col>
+                            <Form.Control type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
+                        </Col>
+                        <Col className="hours">
+                            Hours
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Control type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
+                        </Col>
+                        <Col className="minutes">
+                            Minutes
+                        </Col>
+                    </Row>
                 </Form.Group>
                 
-                <Button variant="primary" type="submit">
+                <Button className="update-button" type="submit">
                     Update
                 </Button>
             </Form>
