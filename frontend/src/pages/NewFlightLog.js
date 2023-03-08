@@ -138,7 +138,7 @@ const NewFlightLog = () => {
                     <Form.Label>Duration</Form.Label>
                     <Row className="mb-2">
                         <Col>
-                            <Form.Control type="number" value={durationHours} onChange={onChangeDurationHours} />
+                            <Form.Control type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
                         </Col>
                         <Col className="mb-0">
                             Hours
@@ -146,7 +146,7 @@ const NewFlightLog = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control type="number" value={durationMinutes} onChange={onChangeDurationMinutes} />
+                            <Form.Control type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
                         </Col>
                         <Col>
                             Minutes
