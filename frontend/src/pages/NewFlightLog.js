@@ -22,7 +22,8 @@ const NewFlightLog = () => {
     const [takeoffTime, setTakeoffTime] = useState(0);
     const [landingDate, setLandingDate] = useState();
     const [landingTime, setLandingTime] = useState(0);
-    const [duration, setDuration] = useState();
+    const [durationHours, setDurationHours] = useState(0);
+    const [durationMinutes, setDurationMinutes] = useState(0);
 
     const onChangeTailNumber = (event) => {
         const tailNumber = event.target.value;
@@ -48,9 +49,13 @@ const NewFlightLog = () => {
         const landingTime = time;
         setLandingTime(landingTime);
     }
-    const onChangeDuration = (event) => {
-        const duration = event.target.value;
-        setDuration(duration);
+    const onChangeDurationHours = (event) => {
+        const durationHour = event.target.value;
+        setDurationHours(durationHour);
+    }
+    const onChangeDurationMinutes = (event) => {
+        const durationMinute = event.target.value;
+        setDurationMinutes(durationMinute);
     }
     const formatTimeToHHMMSS = (time) => {
         var sec_num = parseInt(time, 10);
@@ -64,6 +69,10 @@ const NewFlightLog = () => {
         return hours+':'+minutes+':'+seconds;
     }
 
+    const formatDurationString = (hour, minute) => {
+        return hour + " hr " + minute + " min"
+    }
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
@@ -71,13 +80,13 @@ const NewFlightLog = () => {
         const formatLandingTime = formatTimeToHHMMSS(landingTime);
         const isoFormatTakeoff = takeoffDate + "T" + formatTakeoffTime + "Z";
         const isoFormatLanding = landingDate + "T" + formatLandingTime + "Z";
-
+        const formatDuration = formatDurationString(durationHours, durationMinutes);
         const newFlightLog = {
             tailNumber: tailNumber,
             flightID: flightID,
             takeoff: isoFormatTakeoff,
             landing: isoFormatLanding,
-            duration: duration
+            duration: formatDuration
         }
         axios.post(API_URL, newFlightLog)
             .then((response) => {
@@ -112,14 +121,14 @@ const NewFlightLog = () => {
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="takeoff">
-                    <Form.Label>Takeoff Time</Form.Label>
+                    <Form.Label>Takeoff</Form.Label>
                     <img src={takeoffLogo} width="40px" alt="takeoff" />
                     <Form.Control className="mb-2" type="date" onChange={onChangeTakeoffDate} />
                     <TimePicker start="00:00" end="23:59" step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="landing">
-                    <Form.Label>Landing Time</Form.Label>
+                    <Form.Label>Landing</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
                     <Form.Control className="mb-2" type="date" min={takeoffDate} onChange={onChangeLandingDate} />
                     <TimePicker start="00:00" end="23:59" step={1} value={landingTime} onChange={onChangeLandingTime} />
@@ -127,7 +136,22 @@ const NewFlightLog = () => {
                 
                 <Form.Group className="mb-3" controlId="duration">
                     <Form.Label>Duration</Form.Label>
-                    <Form.Control type="text" placeholder="0h 0min" onChange={onChangeDuration} />
+                    <Row className="mb-2">
+                        <Col>
+                            <Form.Control type="number" value={durationHours} onChange={onChangeDurationHours} />
+                        </Col>
+                        <Col className="mb-0">
+                            Hours
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Control type="number" value={durationMinutes} onChange={onChangeDurationMinutes} />
+                        </Col>
+                        <Col>
+                            Minutes
+                        </Col>
+                    </Row>
                 </Form.Group>
                 
                 <Button variant="primary" type="submit">
