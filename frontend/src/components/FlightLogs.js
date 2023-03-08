@@ -13,13 +13,13 @@ const FlightLogs = (props) => {
     
     console.log(flightlogs);
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover responsive>
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Tail Number</th>
                     <th>Flight ID</th>
-                    <th>Take Off Time</th>
+                    <th>Takeoff Time</th>
                     <th>Landing Time</th>
                     <th>Duration</th>
                     <th>Actions</th>

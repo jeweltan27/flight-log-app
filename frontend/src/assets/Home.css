@@ -7,9 +7,29 @@
     margin-right: 40px;
 }
 
-.create-button {
+.create-button-div {
     margin-bottom: 10px;
     text-align: right;
+}
+
+.create-button {
+    background-color: rgb(116, 116, 116);
+}
+
+.create-button:hover {
+    background-color: rgb(59, 59, 59);
+}
+
+.update-buttons {
+    background-color: rgb(26, 138, 251);
+}
+
+.update-buttons:hover {
+    background-color: rgb(17, 83, 152);
+}
+
+.delete-buttons {
+    margin-left: 50px;
 }
 
 .form-group {

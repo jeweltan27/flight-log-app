@@ -1,5 +1,6 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
+
 import axios from "axios"; 
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
@@ -72,8 +73,8 @@ const FlightLog = (props) => {
                 </td>
 
                 <td>
-                    <Button className="first-button" variant="primary" onClick={handleUpdate}>Update</Button>
-                    <Button variant="outline-danger" onClick={handleDelete} >Delete</Button>
+                    <Button className="update-buttons" onClick={handleUpdate}>Update</Button>
+                    <Button className="delete-buttons" variant="outline-danger" onClick={handleDelete} >Delete</Button>
                 </td>
 
             </tr>

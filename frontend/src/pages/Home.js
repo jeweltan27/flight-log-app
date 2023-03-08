@@ -34,9 +34,9 @@ const Home = () => {
                 Flight Logs
             </h2>
 
-            <div className="create-button">
-                <Button variant="outline-secondary" onClick={onHandleClick}>
-                    Create new flight log
+            <div className="create-button-div">
+                <Button className="create-button" onClick={onHandleClick}>
+                    Create New Flightlog
                 </Button>
             </div>
                 
