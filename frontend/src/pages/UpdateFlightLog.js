@@ -2,14 +2,12 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import axios from 'axios';
 import TimePicker from 'react-bootstrap-time-picker';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
-
-import { useNavigate } from 'react-router-dom';
 import "../assets/UpdateFlightLog.css";
 import takeoffLogo from "../assets/takeoff.png";
 import landingLogo from "../assets/landing.png";
@@ -101,7 +99,10 @@ const UpdateFlightLog = () => {
             setInvalidDate(true);
             setInvalidDateMessage("Landing date cannot be before takeoff date!")
         }
-
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -111,6 +112,14 @@ const UpdateFlightLog = () => {
         const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
         const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
         const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -139,6 +148,14 @@ const UpdateFlightLog = () => {
         const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
         const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
         const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -172,7 +189,7 @@ const UpdateFlightLog = () => {
             })
         
         navigate("/home");
-        window.location.reload();
+        // window.location.reload();
     }
 
     return (
@@ -195,34 +212,34 @@ const UpdateFlightLog = () => {
             <Form className="form" onSubmit={handleOnSubmit}>
                 <Form.Group className="mb-3" controlId="tailNumber">
                     <Form.Label>Tail Number</Form.Label>
-                    <Form.Control type="text" value={tailNumber} onChange={onChangeTailNumber}/>
+                    <Form.Control className="input-field" required type="text" value={tailNumber} onChange={onChangeTailNumber}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="flightID">
                     <Form.Label>Flight ID</Form.Label>
-                    <Form.Control type="text"  value={flightID} onChange={onChangeFlightID}/>
+                    <Form.Control className="input-field" required type="text"  value={flightID} onChange={onChangeFlightID}/>
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="takeoff">
                     <Form.Label>Takeoff Time</Form.Label>
                     <img src={takeoffLogo} width="40px" alt="takeoff" />
-                    <Form.Control className="mb-2" type="date" value={takeoffDate} onChange={onChangeTakeoffDate} />
-                    <TimePicker step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
+                    <Form.Control className="input-field mb-2" required type="date" value={takeoffDate} onChange={onChangeTakeoffDate} />
+                    <TimePicker className="input-field" step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing Time</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
                     <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
-                    <Form.Control className="mb-2" type="date" min={takeoffDate} value={landingDate} onChange={onChangeLandingDate} />
-                    <TimePicker step={1} value={landingTime} onChange={onChangeLandingTime} />
+                    <Form.Control className="input-field mb-2" required type="date" min={takeoffDate} value={landingDate} onChange={onChangeLandingDate} />
+                    <TimePicker className="input-field" step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="duration">
                     <Form.Label>Duration</Form.Label>
                     <Row className="mb-2">
                         <Col>
-                            <Form.Control type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
+                            <Form.Control required type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
                         </Col>
                         <Col className="hours">
                             Hours
@@ -230,7 +247,7 @@ const UpdateFlightLog = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
+                            <Form.Control required type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
                         </Col>
                         <Col className="minutes">
                             Minutes

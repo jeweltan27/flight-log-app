@@ -60,7 +60,10 @@ const NewFlightLog = () => {
             setInvalidDate(true);
             setInvalidDateMessage("Landing date cannot be before takeoff date!")
         }
-
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -71,6 +74,14 @@ const NewFlightLog = () => {
         const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
         const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
         const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -99,6 +110,14 @@ const NewFlightLog = () => {
         const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
         const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
         const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
         setDurationHours(hours);
         setDurationMinutes(minutes);
     }
@@ -148,9 +167,12 @@ const NewFlightLog = () => {
         axios.post(API_URL, newFlightLog)
             .then((response) => {
                 console.log(response.data)
+                navigate("/home");
+                // window.location.reload();
             })
-        navigate("/home");
-        window.location.reload();
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
     return (
@@ -169,34 +191,34 @@ const NewFlightLog = () => {
             <Form className="form" onSubmit={handleOnSubmit}>
                 <Form.Group className="mb-3" controlId="tailNumber">
                     <Form.Label>Tail Number</Form.Label>
-                    <Form.Control type="text" onChange={onChangeTailNumber}/>
+                    <Form.Control className="input-field" required type="text" onChange={onChangeTailNumber}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="flightID">
                     <Form.Label>Flight ID</Form.Label>
-                    <Form.Control type="text" onChange={onChangeFlightID}/>
+                    <Form.Control className="input-field" required type="text" onChange={onChangeFlightID}/>
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="takeoff">
                     <Form.Label>Takeoff</Form.Label>
                     <img src={takeoffLogo} width="40px" alt="takeoff" />
-                    <Form.Control className="mb-2" type="date" value={takeoffDate} onChange={onChangeTakeoffDate} />
-                    <TimePicker start="00:00" end="23:59" step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
+                    <Form.Control className="input-field mb-2" required type="date" value={takeoffDate} onChange={onChangeTakeoffDate} />
+                    <TimePicker className="input-field" required start="00:00" end="23:59" step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
                     <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
-                    <Form.Control className="mb-2" type="date" value={landingDate} min={takeoffDate} onChange={onChangeLandingDate} />
-                    <TimePicker start="00:00" end="23:59" step={1} value={landingTime} onChange={onChangeLandingTime} />
+                    <Form.Control className="input-field mb-2" required type="date" value={landingDate} min={takeoffDate} onChange={onChangeLandingDate} />
+                    <TimePicker className="input-field" required start="00:00" end="23:59" step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="duration">
                     <Form.Label>Duration</Form.Label>
                     <Row className="mb-2">
                         <Col>
-                            <Form.Control type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
+                            <Form.Control required type="number" min="0" value={durationHours} onChange={onChangeDurationHours} />
                         </Col>
                         <Col className="mb-0">
                             Hours
@@ -204,7 +226,7 @@ const NewFlightLog = () => {
                     </Row>
                     <Row>
                         <Col>
-                            <Form.Control type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
+                            <Form.Control required type="number" min="0" max="59" value={durationMinutes} onChange={onChangeDurationMinutes} />
                         </Col>
                         <Col>
                             Minutes

@@ -39,9 +39,11 @@ const FlightLog = (props) => {
         axios.delete(API_URL + "/" + flightlog.id)
         .then((response) => {
             console.log(response.data)
+            window.location.reload()
+        })
+        .catch((error) => {
+            console.log(error)
         });
-        navigate("/home");
-        window.location.reload()
     }
 
     return (
