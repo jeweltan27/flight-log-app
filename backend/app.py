@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify
 from os import error
 from sqlalchemy import create_engine, text
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_jwt_identity
 import decouple
 from decouple import config
+from flask_bcrypt import Bcrypt
 
 base_url = config("BASE_URL")
 db_user = config("DB_USER")
@@ -18,6 +19,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://{username}:{pass
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_recycle": 299}
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 engine = create_engine("mysql+mysqlconnector://{username}:{password}@{hostname}".format(
     username=db_user, password=db_password, hostname=base_url
@@ -29,6 +31,8 @@ with engine.connect() as conn:
     conn.execute(use_db_query) # select new db
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+
 CORS(app)
 
 class User(db.Model):
@@ -109,14 +113,16 @@ jwt = JWTManager(app)
 ####################################################
 # User registration
 @app.route("/user/register", methods=["POST"])
+@cross_origin()
 def register():
     username = request.json.get("username")
     userPassword = request.json.get("password")
     accessToken = create_access_token(identity=username)
+    hashUserPassword = bcrypt.generate_password_hash(userPassword)
 
     newUser = User(
         username=username,
-        userPassword=userPassword,
+        userPassword=hashUserPassword,
         accessToken=accessToken
     )
     
@@ -141,35 +147,34 @@ def register():
 
 # User authentication
 @app.route("/user/authenticate", methods=["POST"])
-@jwt_required()
+@cross_origin()
 def authenticate():
     username = request.json.get("username")
-    password = request.json.get("password")
-    registeredUser = User.query.filter_by(username=username, userPassword=password).first()
-    
-    if registeredUser:
-        accessToken = registeredUser.accessToken
-    
-    else:
-        if (User.query.filter_by(username=username).first()):
+    password = request.json.get("userPassword")
+    user = User.query.filter_by(username=username).first()
+    if user:
+        if bcrypt.check_password_hash(user.userPassword, password):
+            # generate jwt token
+            accessToken = create_access_token(identity=username)
             return jsonify(
                 {
-                    "code": 401,
-                    "message": "Wrong password"
+                    "accessToken": accessToken
                 }
-            ), 401
+            ), 200
         return jsonify(
             {
                 "code": 400,
-                "message": "User does not exist. Register for an account"
+                "message": "Invalid username or password"
             }
         ), 400
-    
-    return jsonify(
+    else:
+        return jsonify(
         {
-            "accessToken": accessToken
+            "code": 400,
+            "message": "Your account does not exist."
         }
-    ), 200
+    ), 400
+
 
 # User endpoint
 @app.route("/user", methods=["GET"])

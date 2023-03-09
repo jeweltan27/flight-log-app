@@ -1,33 +1,60 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
+import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
+const API_URL = "http://127.0.0.1:5000/user/"
 
+const bearerToken = process.env.AUTH;
 const Login = () => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [hasError, setHasError] = useState(false);
 
     const onChangeUsername = (event) => {
         const username = event.target.value;
         setUsername(username);
-        console.log("Username is", username);
     }
 
     const onChangePassword = (event) => {
         const password = event.target.value;
         setPassword(password);
-        console.log("Password is", password);
-
     }
 
     const handleOnSubmit = (event) => {
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+        setHasError(false);
+        event.preventDefault();
+
+        const user = {
+            "username": username,
+            "userPassword": password
+        }
         
-        navigate("/home");
+        axios.post(
+            API_URL + "authenticate", 
+            user, 
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + bearerToken,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                setMessage(error.response.data.message);
+                setHasError(true);
+            })
+
+        // navigate("/home");
+            
     }
 
     const handleRegisterOnSubmit = (event) => {
@@ -37,29 +64,35 @@ const Login = () => {
 
     return(
         <div className="login">
+            <h2>
+                Login
+            </h2>
             <Form onSubmit={handleOnSubmit}>
-                <Form.Group className="form-group" controlId="formBasicEmail">
+                <Form.Group controlId="username">
                     <Form.Label>Username</Form.Label>
-                    <Form.Control type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
+                    <Form.Control className="w-25" type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
                 </Form.Group>
 
-                <Form.Group className="form-group" controlId="formBasicPassword">
+                <Form.Group className="mt-3" controlId="password">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" required onChange={onChangePassword} />
+                    <Form.Control className="w-25" type="password" placeholder="Password" required onChange={onChangePassword} />
                 </Form.Group>
                 
-                <Button variant="primary" type="submit">
+                <Button className="mt-3 login-button" type="submit">
                     Login
                 </Button>
             </Form>
 
+            <Alert className="mt-3 w-25" variant="danger" show={hasError}>
+                {message}
+            </Alert>
+
             <Form onSubmit={handleRegisterOnSubmit}>
-                <p>
+                <p className="register-form">
                     Not a user?
-                    <br />
-                    <Button variant="outline-dark" type="submit">
+                    <a href="/register">
                         Register here
-                    </Button>
+                    </a>
                 </p>
                 
             </Form>

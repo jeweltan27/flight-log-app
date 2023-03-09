@@ -1,5 +1,5 @@
 import React from 'react'
-import FlightLogs from '../components/FlightLogs'
+// import FlightLogs from '../components/FlightLogs'
 import "../assets/Home.css";
 
 const Home = () => {

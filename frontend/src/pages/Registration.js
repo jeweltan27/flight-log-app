@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate, Link } from 'react-router-dom';
+import axios from "axios"; 
+import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
+const API_URL = "http://127.0.0.1:5000/user/"
+const bearerToken = process.env.AUTH;
 
 export const Registration = () => {
     const navigate = useNavigate();
@@ -13,37 +16,58 @@ export const Registration = () => {
     const onChangeUsername = (event) => {
         const username = event.target.value;
         setUsername(username);
-        console.log("Username is", username);
     }
 
     const onChangePassword = (event) => {
         const password = event.target.value;
         setPassword(password);
-        console.log("Password is", password);
-
     }
 
     const handleOnSubmit = (e) => {
+        const newUser = {
+            "username": username,
+            "password": password
+        }
+
         e.preventDefault();
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
-        console.log("Username and password", username, password);
+       
+        axios.post(
+            API_URL + "register", 
+            newUser,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + bearerToken,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
         navigate("/");
+
     }
   return (
     <div className="register">
+        <h2>
+            Register new account
+        </h2>
         <Form onSubmit={handleOnSubmit}>
-            <Form.Group className="form-group" controlId="formBasicEmail">
+            <Form.Group className="form-group" controlId="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
             </Form.Group>
 
-            <Form.Group className="form-group" controlId="formBasicPassword">
+            <Form.Group className="form-group" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" required onChange={onChangePassword} />
             </Form.Group>
             
-            <Button variant="primary" type="submit">
+            <Button className="register-button" type="submit">
                 Register
             </Button>
         </Form>
