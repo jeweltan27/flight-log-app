@@ -118,7 +118,7 @@ const UpdateFlightLog = () => {
                 console.log(response.data)
             })
         
-        navigate("/");
+        navigate("/home");
         window.location.reload();
     }
 
@@ -126,7 +126,7 @@ const UpdateFlightLog = () => {
         <div className="giant-block">
             <Row>
                 <Col md="auto">
-                    <a href="/" className="link-secondary">
+                    <a href="/home" className="link-secondary">
                         Go back
                     </a>
                 </Col>

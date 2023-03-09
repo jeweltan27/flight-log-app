@@ -53,7 +53,7 @@ const Login = () => {
                 setHasError(true);
             })
 
-        // navigate("/home");
+        navigate("/home");
             
     }
 

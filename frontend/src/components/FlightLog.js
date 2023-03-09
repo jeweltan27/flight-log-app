@@ -40,7 +40,7 @@ const FlightLog = (props) => {
         .then((response) => {
             console.log(response.data)
         });
-        navigate("/");
+        navigate("/home");
         window.location.reload()
     }
 
