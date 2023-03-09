@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
+
 import { useNavigate } from 'react-router-dom';
 import "../assets/UpdateFlightLog.css";
 import takeoffLogo from "../assets/takeoff.png";
@@ -42,6 +44,19 @@ const UpdateFlightLog = () => {
         return hour + " hr " + minute + " min"
     }
 
+    const calculateDuration = (takeoffDateTimeISO, landingDateTimeISO) => {
+        const millisecondsDiff = new Date(landingDateTimeISO) - new Date(takeoffDateTimeISO);
+        const hours   = Math.floor(millisecondsDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((millisecondsDiff - (hours * 1000 * 60 * 60)) / (1000 * 60));
+
+        return [hours, minutes]
+    }
+
+    const isoFormatDateTime = (date, time) => {
+        const formatTimeString = formatTimeToHHMMSS(time);
+        return date + "T" + formatTimeString + "Z";
+    }
+
     // Format date and time to match input fields' required format
     const currentTakeoffDate = moment(currentTakeoff).utc().format('YYYY-MM-DD');
     const currentTakeoffTime = reverseFormatTimeToSeconds(currentTakeoff.split('T')[1]);
@@ -61,6 +76,8 @@ const UpdateFlightLog = () => {
     const [landingTime, setLandingTime] = useState(currentLandingTime);
     const [durationHours, setDurationHours] = useState(currentHour);
     const [durationMinutes, setDurationMinutes] = useState(currentMinute);
+    const [invalidDate, setInvalidDate] = useState(false);
+    const [invalidDateMessage, setInvalidDateMessage] = useState('');
 
     // When input fields change
     const onChangeTailNumber = (event) => {
@@ -72,20 +89,58 @@ const UpdateFlightLog = () => {
         setFlightID(flightID);
     }
     const onChangeTakeoffDate = (event) => {
+        setInvalidDate(false);
+        setInvalidDateMessage('');
         const takeoffDate = event.target.value;
         setTakeoffDate(takeoffDate);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeTakeoffTime = (time) => {
         const takeoffTime = time;
         setTakeoffTime(takeoffTime);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeLandingDate = (event) => {
         const landingDate = event.target.value;
         setLandingDate(landingDate);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
+
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeLandingTime = (time) => {
         const landingTime = time;
         setLandingTime(landingTime);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeDurationHours = (event) => {
         const durationHour = event.target.value;
@@ -101,10 +156,8 @@ const UpdateFlightLog = () => {
         e.preventDefault();
         
         // Format date and time to ISO8601 format for storage
-        const formatTakeoffTime = formatTimeToHHMMSS(takeoffTime);
-        const formatLandingTime = formatTimeToHHMMSS(landingTime);
-        const isoFormatTakeoff = takeoffDate + "T" + formatTakeoffTime + "Z";
-        const isoFormatLanding = landingDate + "T" + formatLandingTime + "Z";
+        const isoFormatTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatLanding = isoFormatDateTime(landingDate, landingTime);
         const formatDuration = formatDurationString(durationHours, durationMinutes);
         const updatedFlightLog = {
             tailNumber: tailNumber,
@@ -160,6 +213,7 @@ const UpdateFlightLog = () => {
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing Time</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
+                    <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
                     <Form.Control className="mb-2" type="date" min={takeoffDate} value={landingDate} onChange={onChangeLandingDate} />
                     <TimePicker step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>

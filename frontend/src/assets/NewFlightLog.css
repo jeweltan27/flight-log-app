@@ -5,11 +5,11 @@
     width: 50%;
 }
 
-.takeoff-time {
-    color: red;
+.second-col {
+    padding-left: 5px;
 }
 
-.landing-time {
-    color: blue;
+.alert {
+    font-weight: 400;
 }
 

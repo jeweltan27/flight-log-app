@@ -3,6 +3,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
+
 import axios from 'axios';
 import TimePicker from 'react-bootstrap-time-picker';
 import { useNavigate } from 'react-router-dom';
@@ -15,15 +17,27 @@ const API_URL = "http://127.0.0.1:5000/flightLog"
 
 const NewFlightLog = () => {
     const navigate = useNavigate();
+    const today = new Date().toISOString().substring(0, 10);
 
     const [tailNumber, setTailNumber] = useState();
     const [flightID, setFlightID] = useState();
-    const [takeoffDate, setTakeoffDate] = useState();
+    const [takeoffDate, setTakeoffDate] = useState(today);
     const [takeoffTime, setTakeoffTime] = useState(0);
-    const [landingDate, setLandingDate] = useState();
+    const [landingDate, setLandingDate] = useState(today);
     const [landingTime, setLandingTime] = useState(0);
     const [durationHours, setDurationHours] = useState(0);
     const [durationMinutes, setDurationMinutes] = useState(0);
+    const [invalidDate, setInvalidDate] = useState(false);
+    const [invalidDateMessage, setInvalidDateMessage] = useState('');
+    
+
+    const calculateDuration = (takeoffDateTimeISO, landingDateTimeISO) => {
+        const millisecondsDiff = new Date(landingDateTimeISO) - new Date(takeoffDateTimeISO);
+        const hours   = Math.floor(millisecondsDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((millisecondsDiff - (hours * 1000 * 60 * 60)) / (1000 * 60));
+
+        return [hours, minutes]
+    }
 
     const onChangeTailNumber = (event) => {
         const tailNumber = event.target.value;
@@ -34,20 +48,59 @@ const NewFlightLog = () => {
         setFlightID(flightID);
     }
     const onChangeTakeoffDate = (event) => {
+        setInvalidDate(false);
+        setInvalidDateMessage('');
         const takeoffDate = event.target.value;
         setTakeoffDate(takeoffDate);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeTakeoffTime = (time) => {
+
         const takeoffTime = time;
         setTakeoffTime(takeoffTime);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeLandingDate = (event) => {
         const landingDate = event.target.value;
         setLandingDate(landingDate);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        
+        if (hours < 0 || minutes < 0) {
+            setInvalidDate(true);
+            setInvalidDateMessage("Landing date cannot be before takeoff date!")
+        }
+        else {
+            setInvalidDate(false);
+            setInvalidDateMessage('');
+        }
+
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeLandingTime = (time) => {
         const landingTime = time;
         setLandingTime(landingTime);
+        const isoFormatCurrentTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatCurrentLanding = isoFormatDateTime(landingDate, landingTime);
+        const [hours, minutes] = calculateDuration(isoFormatCurrentTakeoff, isoFormatCurrentLanding);
+        setDurationHours(hours);
+        setDurationMinutes(minutes);
     }
     const onChangeDurationHours = (event) => {
         const durationHour = event.target.value;
@@ -57,6 +110,12 @@ const NewFlightLog = () => {
         const durationMinute = event.target.value;
         setDurationMinutes(durationMinute);
     }
+
+    const isoFormatDateTime = (date, time) => {
+        const formatTimeString = formatTimeToHHMMSS(time);
+        return date + "T" + formatTimeString + "Z";
+    }
+
     const formatTimeToHHMMSS = (time) => {
         var sec_num = parseInt(time, 10);
         var hours   = Math.floor(sec_num / 3600);
@@ -76,10 +135,8 @@ const NewFlightLog = () => {
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
-        const formatTakeoffTime = formatTimeToHHMMSS(takeoffTime);
-        const formatLandingTime = formatTimeToHHMMSS(landingTime);
-        const isoFormatTakeoff = takeoffDate + "T" + formatTakeoffTime + "Z";
-        const isoFormatLanding = landingDate + "T" + formatLandingTime + "Z";
+        const isoFormatTakeoff = isoFormatDateTime(takeoffDate, takeoffTime);
+        const isoFormatLanding = isoFormatDateTime(landingDate, landingTime);
         const formatDuration = formatDurationString(durationHours, durationMinutes);
         const newFlightLog = {
             tailNumber: tailNumber,
@@ -112,25 +169,26 @@ const NewFlightLog = () => {
             <Form className="form" onSubmit={handleOnSubmit}>
                 <Form.Group className="mb-3" controlId="tailNumber">
                     <Form.Label>Tail Number</Form.Label>
-                    <Form.Control type="text" placeholder="A380" onChange={onChangeTailNumber}/>
+                    <Form.Control type="text" onChange={onChangeTailNumber}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="flightID">
                     <Form.Label>Flight ID</Form.Label>
-                    <Form.Control type="text" placeholder="SQ001" onChange={onChangeFlightID}/>
+                    <Form.Control type="text" onChange={onChangeFlightID}/>
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="takeoff">
                     <Form.Label>Takeoff</Form.Label>
                     <img src={takeoffLogo} width="40px" alt="takeoff" />
-                    <Form.Control className="mb-2" type="date" onChange={onChangeTakeoffDate} />
+                    <Form.Control className="mb-2" type="date" value={takeoffDate} onChange={onChangeTakeoffDate} />
                     <TimePicker start="00:00" end="23:59" step={1} value={takeoffTime} onChange={onChangeTakeoffTime} />
                 </Form.Group>
                 
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
-                    <Form.Control className="mb-2" type="date" min={takeoffDate} onChange={onChangeLandingDate} />
+                    <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
+                    <Form.Control className="mb-2" type="date" value={landingDate} min={takeoffDate} onChange={onChangeLandingDate} />
                     <TimePicker start="00:00" end="23:59" step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>
                 
