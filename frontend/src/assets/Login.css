@@ -7,6 +7,7 @@
     width: 30%;
 }
 
+
 label {
     font-weight: 500;
 }
@@ -21,8 +22,9 @@ a {
     margin-left: 5px;
 }
 
-.alert {
+div.alert {
     padding: 8px;
+    width: 30%;
 }
 
 .login-button, .register-button {

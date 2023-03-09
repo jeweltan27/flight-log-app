@@ -5,6 +5,10 @@
     width: 50%;
 }
 
+.input-field, .alert {
+    width: 63%;
+}
+
 .second-col {
     padding-left: 5px;
     margin-top: 50px;

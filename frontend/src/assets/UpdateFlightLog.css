@@ -18,6 +18,9 @@ a, p {
     padding-left: 5px;
     margin-top: 50px;
 }
+.input-field, .alert {
+    margin-right: 0px;
+}
 
 img {
     margin-left: 20px;

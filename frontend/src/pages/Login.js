@@ -84,7 +84,7 @@ const Login = () => {
                     </Button>
                 </Form>
 
-                <Alert className="mt-3 field" variant="danger" show={hasError}>
+                <Alert className="mt-3" variant="danger" show={hasError}>
                     {message}
                 </Alert>
 
