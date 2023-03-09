@@ -11,7 +11,6 @@ const FlightLogs = (props) => {
         setFlightlogs(props.flightlogs); 
       }, [props.flightlogs]);
     
-    console.log(flightlogs);
     return (
         <Table striped bordered hover responsive>
             <thead>
@@ -26,13 +25,20 @@ const FlightLogs = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {
-                    flightlogs?.map(flightlog => (
+                {flightlogs && flightlogs.length > 0 ? 
+                    
+                    flightlogs.map(flightlog => (
                         <FlightLog key={flightlog.id} flightlog={flightlog} /> 
-                    ))
+                    )) :
+                    <tr>
+                        <td colSpan="12">
+                            There are no flightlogs!
+                            Create a new one.
+                        </td>
+                    </tr>
                 }
             </tbody>
-            </Table>
+        </Table>
     )
 }
 
