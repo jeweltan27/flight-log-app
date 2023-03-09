@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
@@ -52,26 +54,38 @@ export const Registration = () => {
 
     }
   return (
-    <div className="register">
-        <h2>
-            Register new account
-        </h2>
-        <Form onSubmit={handleOnSubmit}>
-            <Form.Group className="form-group" controlId="username">
-                <Form.Label>Username</Form.Label>
-                <Form.Control type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
-            </Form.Group>
-
-            <Form.Group className="form-group" controlId="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" required onChange={onChangePassword} />
-            </Form.Group>
+    <div className="container-fluid">
             
-            <Button className="register-button" type="submit">
+        <div className="login">
+        
+            <h2 className='mb-3'>
                 Register
-            </Button>
-        </Form>
-    </div>
+            </h2>
+            <Form onSubmit={handleOnSubmit}>
+                <Form.Group controlId="username">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control className="field" type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
+                </Form.Group>
+
+                <Form.Group className="mt-3" controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control className="field" type="password" placeholder="Password" required onChange={onChangePassword} />
+                </Form.Group>
+                
+                <Button className="mt-3 login-button" type="submit">
+                    Register
+                </Button>
+            </Form>
+
+            <p className="register-form">
+                <a href="/">
+                    Back to login page
+                </a>
+            </p>
+
+        </div>
+
+        </div>
   )
 }
 

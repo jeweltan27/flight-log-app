@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios"; 
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
 import FlightLogs from '../components/FlightLogs'
 import "../assets/Home.css";
-import Logout from "../assets/logout.png";
 
 const API_URL = "http://127.0.0.1:5000/"
 
 const Home = () => {
     console.log("Inside Home page")
     const navigate = useNavigate();
-    const {state} = useLocation();
-    const { username } = state;
+    const username = localStorage.getItem("username");
     const [flightlogs, setFlightlogs] = useState();
     const onHandleClick = (e) => {
         navigate("/newflightlog");
     }
 
+    const onHandleLogout = (e) => {
+        localStorage.clear();
+    }
     useEffect( () => {
         getAllFlightlogs();
     }, []);
@@ -37,7 +35,7 @@ const Home = () => {
     return (
         <div className="home">
 
-            <a href="/" className="logout">
+            <a onClick={onHandleLogout} href="/" className="logout">
                 Log Out
             </a>
             

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
@@ -47,60 +49,52 @@ const Login = () => {
             })
             .then((response) => {
                 console.log(response);
+                localStorage.setItem("username", username);
+                navigate("/home");
             })
             .catch((error) => {
                 setMessage(error.response.data.message);
                 setHasError(true);
             })
 
-        navigate("/home",
-        {
-            state: {
-                username: username
-            }
-        });
             
     }
 
-    const handleRegisterOnSubmit = (event) => {
-        console.log("User registering")
-        navigate("/register");
-    }
-
     return(
-        <div className="login">
-            <h2>
-                Login
-            </h2>
-            <Form onSubmit={handleOnSubmit}>
-                <Form.Group controlId="username">
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control className="w-25" type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
-                </Form.Group>
+        <div className="container-fluid">
+            
+            <div className="login">
 
-                <Form.Group className="mt-3" controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control className="w-25" type="password" placeholder="Password" required onChange={onChangePassword} />
-                </Form.Group>
-                
-                <Button className="mt-3 login-button" type="submit">
+                <h2 className='mb-3'>
                     Login
-                </Button>
-            </Form>
+                </h2>
+                <Form onSubmit={handleOnSubmit}>
+                    <Form.Group controlId="username">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control className="field" type="text" placeholder="Enter username" required onChange={onChangeUsername}/>
+                    </Form.Group>
 
-            <Alert className="mt-3 w-25" variant="danger" show={hasError}>
-                {message}
-            </Alert>
+                    <Form.Group className="mt-3" controlId="password">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control className="field" type="password" placeholder="Password" required onChange={onChangePassword} />
+                    </Form.Group>
+                    
+                    <Button className="mt-3 login-button" type="submit">
+                        Login
+                    </Button>
+                </Form>
 
-            <Form onSubmit={handleRegisterOnSubmit}>
+                <Alert className="mt-3 field" variant="danger" show={hasError}>
+                    {message}
+                </Alert>
+
                 <p className="register-form">
                     Not a user?
                     <a href="/register">
                         Register here
                     </a>
                 </p>
-                
-            </Form>
+            </div>
         </div>
         
     )
