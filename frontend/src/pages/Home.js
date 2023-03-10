@@ -33,25 +33,25 @@ const Home = () => {
         localStorage.clear();
     }
     useEffect( () => {
-        getAllFlightlogs();
-    }, []);
+        const getAllFlightlogs = () => {
+            axios.get(
+                API_URL + "flightLog",
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    }
+                })
+            .then((response) => {
+                setFlightlogs(response.data.data);
+                console.log(response.data.data);
+                return response.data.data;
+            });
+        };
+        getAllFlightlogs()
+    }, [token]);
 
-    const getAllFlightlogs = () => {
-        axios.get(
-            API_URL + "flightLog",
-            {
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Access-Control-Allow-Origin': '*',
-                    'Content-Type': 'application/json'
-                }
-            })
-        .then((response) => {
-            setFlightlogs(response.data.data);
-            console.log(response.data.data);
-            return response.data.data;
-        });
-    }
 
     return (
         <div className="home">
