@@ -5,12 +5,27 @@
     width: 50%;
 }
 
+#error {
+    width: 63%;
+}
+
+Button.back-button {
+    background-color: white;
+    border-color: white;
+    color: rgb(0, 0, 139);
+}
+
+Button.back-button:hover {
+    background-color: white;
+    border-color: white;
+    color: rgb(1, 1, 61);
+}
+
 .input-field, .alert {
     width: 63%;
 }
 
 .second-col {
-    padding-left: 5px;
     margin-top: 50px;
 }
 
