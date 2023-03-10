@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
 const API_URL = "http://127.0.0.1:5000/user/"
-const bearerToken = process.env.AUTH;
 
 export const Registration = () => {
     const navigate = useNavigate();
@@ -38,19 +35,18 @@ export const Registration = () => {
             newUser,
             {
                 headers: {
-                    'Authorization': 'Bearer ' + bearerToken,
                     'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json'
                 }
             })
             .then((response) => {
                 console.log(response);
+                navigate("/");
             })
             .catch((error) => {
                 console.log(error)
             })
 
-        navigate("/");
 
     }
   return (

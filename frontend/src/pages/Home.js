@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from "axios"; 
 import Button from 'react-bootstrap/Button';
 import FlightLogs from '../components/FlightLogs'
@@ -10,10 +10,23 @@ const API_URL = "http://127.0.0.1:5000/"
 const Home = () => {
     console.log("Inside Home page")
     const navigate = useNavigate();
+    const { state } = useLocation();
+    if (state === null) {
+        localStorage.clear();
+        navigate("/");
+    }
+    const { token } = state;
     const username = localStorage.getItem("username");
     const [flightlogs, setFlightlogs] = useState();
     const onHandleClick = (e) => {
-        navigate("/newflightlog");
+        navigate(
+            "/newflightlog",
+            {
+                state: {
+                    token: token
+                }
+            }
+            );
     }
 
     const onHandleLogout = (e) => {
@@ -24,7 +37,15 @@ const Home = () => {
     }, []);
 
     const getAllFlightlogs = () => {
-        axios.get(API_URL + "flightLog")
+        axios.get(
+            API_URL + "flightLog",
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                }
+            })
         .then((response) => {
             setFlightlogs(response.data.data);
             console.log(response.data.data);

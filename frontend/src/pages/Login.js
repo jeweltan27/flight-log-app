@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Alert from 'react-bootstrap/Alert';
 import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
 const API_URL = "http://127.0.0.1:5000/user/"
 
-const bearerToken = process.env.AUTH;
 const Login = () => {
     const navigate = useNavigate();
 
@@ -42,7 +39,6 @@ const Login = () => {
             user, 
             {
                 headers: {
-                    'Authorization': 'Bearer ' + bearerToken,
                     'Access-Control-Allow-Origin': '*',
                     'Content-Type': 'application/json'
                 }
@@ -50,7 +46,14 @@ const Login = () => {
             .then((response) => {
                 console.log(response);
                 localStorage.setItem("username", username);
-                navigate("/home");
+
+                navigate(
+                    "/home",
+                    {
+                        state: { 
+                            token: response.data.accessToken 
+                        }
+                    });
             })
             .catch((error) => {
                 setMessage(error.response.data.message);

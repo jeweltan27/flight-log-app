@@ -7,7 +7,7 @@ import Alert from 'react-bootstrap/Alert';
 
 import axios from 'axios';
 import TimePicker from 'react-bootstrap-time-picker';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import "../assets/NewFlightLog.css";
 import takeoffLogo from "../assets/takeoff.png";
@@ -17,6 +17,8 @@ const API_URL = "http://127.0.0.1:5000/flightLog"
 
 const NewFlightLog = () => {
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const { token } = state;
     const today = new Date().toISOString().substring(0, 10);
 
     const [tailNumber, setTailNumber] = useState();
@@ -151,6 +153,17 @@ const NewFlightLog = () => {
         return hour + " hr " + minute + " min"
     }
 
+    const handleGoBack = (e) => {
+        navigate(
+            "/home",
+            { 
+                state: {
+                    token: token
+                }
+            }
+        );
+    }
+
     const handleOnSubmit = (e) => {
         e.preventDefault();
 
@@ -164,10 +177,26 @@ const NewFlightLog = () => {
             landing: isoFormatLanding,
             duration: formatDuration
         }
-        axios.post(API_URL, newFlightLog)
+        axios.post(
+            API_URL, 
+            newFlightLog,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then((response) => {
                 console.log(response.data)
-                navigate("/home");
+                navigate(
+                    "/home",
+                    { 
+                        state: {
+                            token: token
+                        }
+                    }
+                );
                 // window.location.reload();
             })
             .catch((error) => {
@@ -179,9 +208,9 @@ const NewFlightLog = () => {
         <div className="giant-block">
             <Row>
                 <Col md="auto">
-                    <a href="/home" className="link-secondary">
+                    <Button onClick={handleGoBack} className="back-button" variant="light">
                         Go back
-                    </a>
+                    </Button>
                 </Col>
                 <Col className="second-col">
                     <h2>Create New Flightlog</h2>
@@ -209,7 +238,7 @@ const NewFlightLog = () => {
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
-                    <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
+                    <Alert id="error" variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
                     <Form.Control className="input-field mb-2" required type="date" value={landingDate} min={takeoffDate} onChange={onChangeLandingDate} />
                     <TimePicker className="input-field" required start="00:00" end="23:59" step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>

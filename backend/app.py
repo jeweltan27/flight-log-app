@@ -172,12 +172,13 @@ def authenticate():
         {
             "code": 400,
             "message": "Your account does not exist."
-        }
-    ), 400
+        }), 400
+    
 
 
 # User endpoint
 @app.route("/user", methods=["GET"])
+@jwt_required()
 def get_user():
     users = User.query.all()
     userArray = []
@@ -203,6 +204,7 @@ def get_user():
 
 # User by ID endpoint
 @app.route("/user/<int:user_id>", methods=["DELETE"])
+@jwt_required()
 def delete_user(user_id):
     user = User.query.filter_by(id=user_id).first()
     
@@ -226,6 +228,7 @@ def delete_user(user_id):
 # FLIGHT LOGS
 # Create new flightlog
 @app.route("/flightLog", methods=["POST"])
+@jwt_required()
 def create_flightlog():
     print(request.json)
     tailNumber = request.json.get("tailNumber")
@@ -262,6 +265,7 @@ def create_flightlog():
 ####################################################
 # Get all flightlogs
 @app.route("/flightLog", methods=["GET"])
+@jwt_required()
 def get_all_flightlog():
     
     try:
@@ -290,6 +294,7 @@ def get_all_flightlog():
 ####################################################
 # Update flightlog
 @app.route("/flightLog/<int:id>", methods=["PUT"])
+@jwt_required()
 def update_flightlog(id):
     
     flightlog = FlightLog.query.filter_by(id=id).first()
@@ -322,6 +327,7 @@ def update_flightlog(id):
 ####################################################
 # Delete flightlog
 @app.route("/flightLog/<int:id>", methods=["DELETE"])
+@jwt_required()
 def delete_flightlog(id):
     flightlog = FlightLog.query.filter_by(id=id).first()
     

@@ -17,8 +17,8 @@ const API_URL = "http://127.0.0.1:5000/flightLog"
 const UpdateFlightLog = () => {
     const navigate = useNavigate();
     const {state} = useLocation();
-    const { id, currentTailNumber, currentFlightID, currentTakeoff, currentLanding, currentDuration } = state;
-    
+    const { token, id, currentTailNumber, currentFlightID, currentTakeoff, currentLanding, currentDuration } = state;
+
     // Helper functions
     const formatTimeToHHMMSS = (time) => {
         var sec_num = parseInt(time, 10);
@@ -168,6 +168,17 @@ const UpdateFlightLog = () => {
         setDurationMinutes(durationMinute);
     }
 
+    const handleGoBack = (e) => {
+        navigate(
+            "/home",
+            { 
+                state: {
+                    token: token
+                }
+            }
+        );
+    }
+
     // When user updates flightlog
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -183,22 +194,36 @@ const UpdateFlightLog = () => {
             landing: isoFormatLanding,
             duration: formatDuration
         }
-        axios.put(API_URL + "/" + id, updatedFlightLog)
+        axios.put(
+            API_URL + "/" + id, 
+            updatedFlightLog,
+            {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
+                }
+            })
             .then((response) => {
                 console.log(response.data)
+                navigate(
+                    "/home",
+                    {state: { token: token }}
+                );
+                window.location.reload();
             })
-        
-        navigate("/home");
-        // window.location.reload();
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     return (
         <div className="giant-block">
             <Row>
                 <Col md="auto">
-                    <a href="/home" className="link-secondary">
+                    <Button onClick={handleGoBack} className="back-button" variant="light">
                         Go back
-                    </a>
+                    </Button>
                 </Col>
                 <Col className="second-col">
                     <h2>Update Flightlog</h2>
@@ -230,7 +255,7 @@ const UpdateFlightLog = () => {
                 <Form.Group className="mb-3" controlId="landing">
                     <Form.Label>Landing Time</Form.Label>
                     <img src={landingLogo} width="40px" alt="landing" />
-                    <Alert variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
+                    <Alert id="error" variant="danger" show={invalidDate}>{invalidDateMessage}</Alert>
                     <Form.Control className="input-field mb-2" required type="date" min={takeoffDate} value={landingDate} onChange={onChangeLandingDate} />
                     <TimePicker className="input-field" step={1} value={landingTime} onChange={onChangeLandingTime} />
                 </Form.Group>
