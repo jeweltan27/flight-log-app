@@ -4,10 +4,21 @@ Single-page application where users can create and view flight log entries
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Start backend server
+### Add `.env` file to `backend` folder
+### Create a new connection in MySQL Workbench with the credentials in the `.env` file
+### `cd backend` 
+### `pip install -r requirements.txt`
+### `python app.py`
+## Start frontend server
+### Open a new terminal
+### `cd frontend` to access the project directory for ReactJS
+### `npm install`
+### `npm start` 
 
-### `cd frontend`
-Brings you to the project directory.
+<hr />
+
+## Available Scripts
 
 In the project directory, you can run:
 ### `npm install`
