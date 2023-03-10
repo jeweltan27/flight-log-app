@@ -1,14 +1,11 @@
-# Getting Started with Flight Log App
-Single-page application where users can create and view flight log entries
-
+# Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
 In the project directory, you can run:
-### `cd frontend`
-### `npm install`
+
 ### `npm start`
 
 Runs the app in the development mode.\

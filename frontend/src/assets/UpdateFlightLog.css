@@ -1,0 +1,56 @@
+.giant-block {
+    margin-top: 15px;
+    margin-left: 20px;
+    font-weight: 500;
+    width: 50%;
+}
+
+Button.back-button {
+    background-color: white;
+    border-color: white;
+    color: rgb(0, 0, 139);
+}
+
+Button.back-button:hover {
+    background-color: white;
+    border-color: white;
+    color: rgb(1, 1, 61);
+}
+
+.form, p {
+    margin-left: 115px;
+}
+
+a, p {
+    font-weight: 400;
+    color: grey;
+}
+.second-col {
+    margin-left: 5px;
+    margin-top: 50px;
+}
+.input-field, .error {
+    margin-right: 0px;
+}
+
+#error {
+    width: 63%;
+}
+
+img {
+    margin-left: 20px;
+}
+
+.update-button {
+    background-color: rgb(78, 166, 255);
+    margin-right: 20px;
+}
+
+.update-button:hover {
+    background-color: rgb(26, 117, 215);
+
+}
+
+.hours, .minutes {
+    padding-top: 12px;
+}
