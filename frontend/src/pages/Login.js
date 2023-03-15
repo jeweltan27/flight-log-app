@@ -31,7 +31,7 @@ const Login = () => {
 
         const user = {
             "username": username,
-            "userPassword": password
+            "password": password
         }
         
         axios.post(

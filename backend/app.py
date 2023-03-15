@@ -150,7 +150,7 @@ def register():
 @cross_origin()
 def authenticate():
     username = request.json.get("username")
-    password = request.json.get("userPassword")
+    password = request.json.get("password")
     user = User.query.filter_by(username=username).first()
     if user:
         if bcrypt.check_password_hash(user.userPassword, password):
