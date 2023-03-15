@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import FlightLogs from '../components/FlightLogs'
 import "../assets/Home.css";
 
-const API_URL = "http://127.0.0.1:5000/"
+const API_URL = "https://flightlog-backend.herokuapp.com/"
 
 const Home = () => {
     console.log("Inside Home page")

@@ -12,7 +12,7 @@ import "../assets/UpdateFlightLog.css";
 import takeoffLogo from "../assets/takeoff.png";
 import landingLogo from "../assets/landing.png";
 
-const API_URL = "http://127.0.0.1:5000/flightLog"
+const API_URL = "https://flightlog-backend.herokuapp.com/flightLog"
 
 const UpdateFlightLog = () => {
     const navigate = useNavigate();

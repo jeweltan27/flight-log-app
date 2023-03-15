@@ -5,7 +5,7 @@ import axios from "axios";
 import moment from 'moment';
 import { useNavigate, useLocation } from 'react-router-dom';
 import "../assets/Home.css";
-const API_URL = "http://127.0.0.1:5000/flightLog"
+const API_URL = "https://flightlog-backend.herokuapp.com/flightLog"
 
 const FlightLog = (props) => {
     const navigate = useNavigate();

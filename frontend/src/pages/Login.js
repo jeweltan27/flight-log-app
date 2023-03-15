@@ -5,7 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 import axios from "axios"; 
 import { useNavigate } from 'react-router-dom';
 import "../assets/Login.css";
-const API_URL = "http://127.0.0.1:5000/user/"
+const API_URL = "https://flightlog-backend.herokuapp.com/user/"
 
 const Login = () => {
     const navigate = useNavigate();
